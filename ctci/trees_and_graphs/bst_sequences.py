@@ -8,4 +8,45 @@ Output: {2, 1, 3}, {2, 3, 1}
 """
 
 
+class BinaryTreeNode:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
 
+
+def waveLists(left, right, prefix, results):
+    result = prefix.copy()
+
+    if not left or not right:
+        result.extend(right)
+        result.extend(left)
+        results.append(result)
+        return results
+
+    prefix.append(left[0])
+    waveLists(left[1:], right, prefix, results)
+    prefix.pop()
+
+    prefix.append(right[0])
+    waveLists(left, right[1:], prefix, results)
+    prefix.pop()
+
+    return results
+
+
+def BSTSequence(root):
+    if not root:
+        return [[]]
+
+    result = []
+    prefix = [root.data]
+
+    leftSequence = BSTSequence(root.left)
+    rightSequence = BSTSequence(root.right)
+
+    for left in leftSequence:
+        for right in rightSequence:
+            result.extend(waveLists(left, right, prefix, []))
+
+    return result
