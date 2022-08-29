@@ -53,15 +53,10 @@ class Database:
         
         return index
     
-    def find(self, field: str, id: int):
-        self.__verify_field(field)
-        
-        for item in getattr(self, field):
-            if item.id == id:
-                return deepcopy(item)
-        
-        raise Exception(f'{Database.__FIELD_TO_TYPE[field].__name__} with id {id} not found!')
-    
+    def find(self, field, id):
+        index = self.__get_index(field, id)
+        return deepcopy(getattr(self, field)[index])
+            
     def insert(self, field, item):
         self.__verify_item_type(field, item)
         items = getattr(self, field)
