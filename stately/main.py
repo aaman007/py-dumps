@@ -34,14 +34,20 @@ class Database:
     def __init__(self):
         self.applications = []
     
+    def __get_field_instance(self, field):
+        self.__verify_field(field)
+        return Database.__FIELD_TO_TYPE[field]
+    
+    def __get_field_instance_name(self, field):
+        return self.__get_field_instance(field).__name__
+
     def __verify_field(self, field):
         if not hasattr(self, field):
             raise Exception(f'Unknown table {field}')
     
     def __verify_item_type(self, field, item):
         self.__verify_field(field)
-
-        if not isinstance(item, Database.__FIELD_TO_TYPE[field]):
+        if not isinstance(item, self.__get_field_instance(field)):
             raise Exception(f'Unsupported item for field {field}')
     
     def __get_index(self, field, id):
@@ -49,7 +55,7 @@ class Database:
 
         index = next((index for index, item in enumerate(getattr(self, field)) if item.id == id), None)
         if index is None:
-            raise Exception(f'{Database.__FIELD_TO_TYPE[field].__name__} with id {id} not found!')
+            raise Exception(f'{self.__get_field_instance_name(field)} with id {id} not found!')
         
         return index
     
@@ -106,6 +112,13 @@ if __name__ == '__main__':
             data={'meta': 'Some meta'},
         )
     )
+    ApplicationService.create(
+        dict(
+            title='My App 2',
+            data={'meta': 'Some meta'},
+        )
+    )
     print(app.__dict__)
     print(ApplicationService.get(1).__dict__)
     print(ApplicationService.update(1, {'status': 'Accepted'}).__dict__)
+    print(ApplicationService.update(2, {'status': 'Rejected'}).__dict__)
