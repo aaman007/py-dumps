@@ -44,6 +44,15 @@ class Database:
         if not isinstance(item, Database.__FIELD_TO_TYPE[field]):
             raise Exception(f'Unsupported item for field {field}')
     
+    def __get_index(self, field, id):
+        self.__verify_field(field)
+
+        index = next((index for index, item in enumerate(getattr(self, field)) if item.id == id), None)
+        if index is None:
+            raise Exception(f'{Database.__FIELD_TO_TYPE[field].__name__} with id {id} not found!')
+        
+        return index
+    
     def find(self, field: str, id: int):
         self.__verify_field(field)
         
@@ -62,11 +71,7 @@ class Database:
     def update(self, field, id, item):
         self.__verify_item_type(field, item)
         items = getattr(self, field)
-
-        index = next((index for index, item in enumerate(items) if item.id == id), None)
-        if index is None:
-            raise Exception(f'{Database.__FIELD_TO_TYPE[field].__name__} with id {id} not found!')
-
+        index = self.__get_index(field, id)
         items[index] = deepcopy(item)
         return item
 
