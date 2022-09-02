@@ -96,7 +96,7 @@ class Database:
     def __verify_item_type(self, field, item):
         self.__verify_field(field)
         if not isinstance(item, self.__get_field_instance(field)):
-            raise Exception(f'Unsupported item for field {field}')
+            raise Exception(f'Unsupported item for table {field}')
     
     def __get_index(self, field, id):
         self.__verify_field(field)
