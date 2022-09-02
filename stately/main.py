@@ -150,7 +150,7 @@ class ApplicationService:
         payload = sanitize_payload(payload)
 
         for attribute, value in payload.items():
-            if attribute in 'status':
+            if attribute == 'status':
                 raise ValueError('status should be updated separately')
             hasattr(app, attribute) and setattr(app, attribute, value)
 
