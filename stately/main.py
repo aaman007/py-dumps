@@ -42,10 +42,10 @@ class StateMachine:
             raise Exception('Invalid state transition')
         
         transition = self._transitions[self._state][next_state]
-        self._state = next_state
         
         transition['pre_hook'] and transition['pre_hook']()
         transition['processor']()
+        self._state = next_state
         transition['post_hook'] and transition['post_hook']()
 
 
